@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dekmantel Selectors 2026 — Cover Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+<script src="https://w.soundcloud.com/player/api.js" async></script>
+<style>
+  :root{
+    --deep: #0B3D45;
+    --night: #12151C;
+    --terracotta: #C96A3E;
+    --sand: #EFE3C8;
+    --gold: #D9A857;
+    --foam: #A3CCC0;
+    --line: rgba(239,227,200,0.16);
+  }
+  *{box-sizing:border-box;}
+  html, body{ background: var(--deep); min-height:100%; }
+  body{
+    margin:0;
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(217,168,87,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(143,187,175,0.12), transparent 60%);
+    color: var(--sand);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x:hidden;
+  }
+  .wrap{max-width:900px; margin:0 auto; padding: 26px 18px 100px;}
+
+  .hero{padding: 14px 0 18px; border-bottom: 1px solid var(--line); margin-bottom: 6px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--foam); margin-bottom:8px;
+  }
+  h1{
+    font-family:'Fraunces', serif; font-weight:600; font-size: clamp(28px,6.5vw,44px);
+    line-height:1.02; margin:0 0 8px; color:var(--sand);
+  }
+  h1 em{font-style:italic; font-weight:400; color:var(--terracotta);}
+  .sub{font-size:14px; color:rgba(239,227,200,0.75); max-width:60ch; line-height:1.5;}
+
+  .note{
+    background: rgba(217,168,87,0.09); border:1px solid rgba(217,168,87,0.35);
+    border-radius:10px; padding:11px 15px; font-size:13px; line-height:1.5;
+    color:var(--sand); margin:18px 0 8px;
+  }
+  .note b{color:var(--gold);}
+
+  /* COVER FLOW */
+  .cf-viewport{
+    position:relative;
+    height: 260px;
+    margin: 30px 0 6px;
+    perspective: 1200px;
+    cursor: grab;
+    user-select:none;
+  }
+  .cf-viewport.dragging{cursor:grabbing;}
+  .cf-track{
+    position:absolute; left:50%; top:50%;
+    transform-style:preserve-3d;
+    width:0; height:0;
+  }
+  .cf-item{
+    position:absolute;
+    top:0; left:0;
+    width:150px; height:150px;
+    margin-left:-75px; margin-top:-75px;
+    transition: transform 0.45s cubic-bezier(.22,.61,.36,1), opacity 0.45s ease, filter 0.45s ease;
+    transform-style:preserve-3d;
+  }
+  .cf-art{
+    width:150px; height:150px;
+    border-radius:6px;
+    overflow:hidden;
+    background: linear-gradient(135deg, rgba(163,204,192,0.15), rgba(217,168,87,0.1));
+    box-shadow: 0 20px 40px rgba(0,0,0,0.45);
+    position:relative;
+  }
+  .cf-art img{
+    width:100%; height:100%; object-fit:cover; display:block;
+    opacity:0; transition: opacity .4s ease;
+    -webkit-user-drag: none; user-drag: none;
+    pointer-events: none;
+  }
+  .cf-art img.loaded{opacity:1;}
+  .cf-placeholder{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-size:44px; font-weight:600; color:rgba(239,227,200,0.55);
+  }
+  .no-player-hint{
+    font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(239,227,200,0.5);
+    padding:14px; border:1px dashed var(--line); border-radius:9px;
+  }
+  .cf-reflection{
+    position:absolute; top:100%; left:0; width:150px; height:150px;
+    transform: scaleY(-1);
+    background-size:cover; background-position:center;
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent 65%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent 65%);
+    opacity:0.55;
+  }
+  /* brightness is now set inline per-frame for smooth continuous transitions */
+  .cf-hint{
+    text-align:center; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    color:rgba(239,227,200,0.4); margin-top:2px;
+  }
+
+  /* Detail panel below coverflow */
+  .detail{ margin-top:26px; min-height: 200px; }
+  .detail-top{display:flex; justify-content:space-between; align-items:flex-start; gap:12px;}
+  .detail-name{font-family:'Fraunces', serif; font-size:26px; font-weight:600; color:var(--sand);}
+  .detail-tag{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+    color: var(--deep); background: var(--foam); padding:4px 10px; border-radius:100px; white-space:nowrap; margin-top:4px;
+  }
+  .detail-blurb{font-size:14.5px; color:rgba(239,227,200,0.75); margin-top:8px; line-height:1.55; max-width:60ch;}
+  .embed-wrap{margin-top:14px; border-radius:10px; overflow:hidden;}
+  .social-row{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
+  .social-btn{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; padding:6px 12px; border-radius:100px;
+    border:1px solid var(--foam); color: var(--foam); text-decoration:none;
+  }
+  .add-btn{
+    margin-top:14px; display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
+    padding:7px 14px; border-radius:100px; border:1px solid var(--gold); background:transparent; color:var(--gold); cursor:pointer;
+  }
+  .add-btn.selected{background:var(--gold); color:var(--night);}
+
+  .planner-bar{
+    position:fixed; bottom:0; left:0; right:0; background: var(--night);
+    border-top:1px solid var(--line); padding: 12px 18px; z-index:50;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .planner-bar span{font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:var(--foam);}
+  .planner-bar button{
+    font-family:'IBM Plex Mono',monospace; font-size:12.5px; padding:9px 16px; border-radius:100px;
+    border:none; background: var(--terracotta); color:var(--night); font-weight:600; cursor:pointer;
+  }
+
+  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-top:16px;}
+  .chip{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; padding:6px 12px;
+    border-radius: 100px; border:1px solid var(--line); background:transparent;
+    color: var(--foam); cursor:pointer; transition: all .15s ease;
+  }
+  .chip:hover{border-color: var(--foam);}
+  .chip.active{background: var(--terracotta); border-color: var(--terracotta); color: var(--night); font-weight:500;}
+  .cf-empty{
+    text-align:center; font-family:'IBM Plex Mono',monospace; font-size:13px;
+    color:rgba(239,227,200,0.45); padding: 60px 0;
+  }
+
+  .hero-top-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
+
+  /* Keep the carousel reachable even if the page auto-scrolls (e.g. focus
+     jump when clicking into the cross-origin Spotify/SoundCloud iframe
+     below) — otherwise a wheel gesture aimed at the images can land on
+     nothing if the browser has scrolled the strip out of view. */
+  .cf-sticky{
+    position: sticky; top: 0; z-index: 40;
+    background: var(--deep);
+    padding-top: 6px;
+  }
+
+  .search{
+    width:100%; padding:11px 14px; border-radius:9px; border:1px solid var(--line);
+    background: rgba(255,255,255,0.04); color:var(--sand); font-family:'Inter'; font-size:14.5px;
+    margin-top:16px;
+  }
+  .search::placeholder{color:rgba(239,227,200,0.4);}
+
+  /* Mobile / iPhone responsiveness */
+  @media (max-width: 600px){
+    .hero-top-row{ flex-direction:column; align-items:stretch; gap:12px; }
+    .cf-viewport{ height:200px; }
+    .cf-item{ width:120px; height:120px; margin-left:-60px; margin-top:-60px; }
+    .cf-art{ width:120px; height:120px; }
+    .cf-reflection{ width:120px; height:120px; }
+    .detail-name{ font-size:21px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="browse-zone" id="browseZone">
+    <div class="hero">
+      <div class="eyebrow">The Garden Resort · Tisno, Hrvatska</div>
+      <h1>Dekmantel<br><em>Selectors</em> 2026</h1>
+      <div class="sub">Cover-Flow-Ansicht der bestätigten Top-Acts mit echtem Artist-Bild. Mit dem Mausrad, per Wischen/Ziehen oder mit dem Finger durchblättern.</div>
+      <input class="search" id="search" placeholder="Artist suchen…">
+      <div class="chips" id="chips"></div>
+    </div>
+  </div>
+
+  <div class="cf-sticky" id="cfSticky">
+    <div class="cf-viewport" id="cfViewport">
+      <div class="cf-track" id="cfTrack"></div>
+    </div>
+    <div class="cf-hint">← Zum Künstlerwechseln hier oben scrollen/ziehen →</div>
+  </div>
+
+  <div class="detail" id="detail"></div>
+</div>
+
+<div class="planner-bar">
+  <span id="plannerCount">0 Acts gemerkt</span>
+</div>
+
+<script>
+// Featured artists: only those with verified socials (real image available via oEmbed)
+const FEATURED_ALL = [
+  ["Marcel Dettmann","Techno","Berghain-Resident, treibender, roher Berlin-Techno — einer der ganz Großen im Line-up.",
+    {instagram:"https://www.instagram.com/marceldettmann/", spotify:"https://open.spotify.com/artist/1sxHp39RqBEE01pgVqsdyP", spotifyId:"1sxHp39RqBEE01pgVqsdyP", soundcloud:"https://soundcloud.com/marceldettmann"}],
+  ["Ron Trent","House","Chicago-Deep-House-Legende, warm, spirituell, jazzy Grooves.",
+    {instagram:"https://www.instagram.com/djrontrent/", spotify:"https://open.spotify.com/artist/0TOZ0i0BHZJYKK2rvoRD2d", spotifyId:"0TOZ0i0BHZJYKK2rvoRD2d", soundcloud:"https://soundcloud.com/ron-trent-official"}],
+  ["Efdemin","Techno","Reduzierter, hypnotischer Deep-Techno, Ostgut-Ton-Stammgast.",
+    {instagram:"https://www.instagram.com/efdemin/", spotify:"https://open.spotify.com/artist/0CpmRH0BntA5zk0JOXH7NI", spotifyId:"0CpmRH0BntA5zk0JOXH7NI", soundcloud:"https://soundcloud.com/efdemin"}],
+  ["Sterac Electronic (Steve Rachmad)","Techno","Niederländische Detroit-Techno-Ikone seit den 90ern.",
+    {instagram:"https://www.instagram.com/steve_rachmad_sterac/", spotify:"https://open.spotify.com/artist/4BmzfIGmnyaxu1REssIgPp", spotifyId:"4BmzfIGmnyaxu1REssIgPp", soundcloud:"https://soundcloud.com/steverachmad"}],
+  ["Antal (techno set)","Disco/Techno","Rush-Hour-Mitgründer, hier im selteneren Techno-Modus statt Disco.",
+    {instagram:"https://www.instagram.com/antalheitlager/", spotify:"https://open.spotify.com/artist/0e1whBY5xv3rF7Zj5cxLD9", spotifyId:"0e1whBY5xv3rF7Zj5cxLD9", soundcloud:"https://soundcloud.com/antalrushhour"}],
+  ["Hunee & Optimo (Espacio)","House/Disco","Zwei Meister-Digger für eklektische, genreübergreifende Marathon-Sets.",
+    {instagram:"https://www.instagram.com/hunchmusic/", spotify:"https://open.spotify.com/artist/6uElH4moADg7AGB3DCGOwy", spotifyId:"6uElH4moADg7AGB3DCGOwy", soundcloud:"https://soundcloud.com/hunee"}],
+  ["Palms Trax","House/Disco","Warme, nostalgische House-Grooves mit Disco-Einschlag.",
+    {instagram:"https://www.instagram.com/palmstrax/", spotify:"https://open.spotify.com/artist/52XSRQqTAfZ8ZrIqkQvQyA", spotifyId:"52XSRQqTAfZ8ZrIqkQvQyA", soundcloud:"https://soundcloud.com/palmstrax"}],
+  ["Job Jobse & Peach & Shanti Celeste","House","Dekmantel-Resident trifft zwei gefragte UK-House-Selectors.",
+    {instagram:"https://www.instagram.com/jobjobse/", soundcloud:"https://soundcloud.com/jobjobse"}],
+  ["DJ Godfather","Ghettotech/Electro","Detroit-Ghettotech-Urgestein, schnell, funky, tanzflächen-fokussiert.",
+    {instagram:"https://www.instagram.com/djgodfatherdetroit/", spotify:"https://open.spotify.com/artist/0cKrM2XKF7wxyfEQDauvyQ", spotifyId:"0cKrM2XKF7wxyfEQDauvyQ", soundcloud:"https://soundcloud.com/dj-godfather"}],
+  ["Mr Scruff","Eclectic/Funk","Britische Institution — verspielte Reisen durch Funk, Soul, Bass, Humor.",
+    {instagram:"https://www.instagram.com/mrs_cruff/", spotify:"https://open.spotify.com/artist/2B0PgHZi2zaDqjKe86Gaip", spotifyId:"2B0PgHZi2zaDqjKe86Gaip", soundcloud:"https://soundcloud.com/mr-scruff"}],
+  ["Benji B","Eclectic/Broken Beat","Ex-BBC-Radio-1-Legende, tiefe Crates zwischen Beats, Grime, Jazz.",
+    {spotify:"https://open.spotify.com/artist/7tyItYjVg0hlom0MlMT02R", spotifyId:"7tyItYjVg0hlom0MlMT02R", soundcloud:"https://soundcloud.com/benji-b"}],
+  ["Simo Cell","Club/Bass","Französischer Livity-Sound-Act, verschrobener Club-Sound mit Bass-Fokus.",
+    {instagram:"https://www.instagram.com/simocellmusic/", spotify:"https://open.spotify.com/artist/4KxpqghQTX2FlkzsbG3ENk", spotifyId:"4KxpqghQTX2FlkzsbG3ENk", soundcloud:"https://soundcloud.com/simocell"}],
+  ["Peverelist","Techno","Bristol-Urgestein zwischen Dubstep-Wurzeln und Techno.",
+    {spotify:"https://open.spotify.com/artist/0UrA452V5vJpCW5ezx0YMP", spotifyId:"0UrA452V5vJpCW5ezx0YMP", soundcloud:"https://soundcloud.com/peverelist"}],
+  ["Tim Reaper & Dwarde","Jungle/D&B","Alte-Schule-Jungle-Revival, schnell und breakslastig.",
+    {spotify:"https://open.spotify.com/artist/03KZUWKQujlCcgEdcrkvWd", spotifyId:"03KZUWKQujlCcgEdcrkvWd", soundcloud:"https://soundcloud.com/tim-reaper"}],
+  // --- Restliche Acts: keine verifizierten Profile, daher Platzhalter-Kachel
+  //     und Suchlinks statt eingebettetem Player ---
+  ["Ploy","Techno/Bass","Timedance-Artist, düsterer, texturierter Bass-Techno.",{soundcloud:"https://soundcloud.com/deejayploy"}],
+  ["Introspekt","Techno/Jungle","Bewegt sich zwischen treibendem Techno und Jungle-Breaks.",{soundcloud:"https://soundcloud.com/sageintrospekt"}],
+  ["Karen Nyame KG","Bass/Club","Energiegeladene UK-Garage- und Bassline-Sets.",{soundcloud:"https://soundcloud.com/karennyamekg"}],
+  ["Virginia","Techno","BPitch-Control-Artistin, minimal-treibender Techno.",{soundcloud:"https://soundcloud.com/virginia-dj"}],
+  ["Orpheu The Wizard","Disco/House","Red-Light-Radio-Mitgründer, warme Discotheque-Grooves.",{soundcloud:"https://soundcloud.com/orpheuthewizard"}],
+  ["Doudou MD","Disco/House","Kalahari-Oyster-Cult, tanzbare Disco- und House-Edits.",{soundcloud:"https://soundcloud.com/doudou-md"}],
+  ["upsammy","Techno","Niederländische Produzentin, texturierter, experimenteller Club-Sound.",{soundcloud:"https://soundcloud.com/upsammy"}],
+  ["Nick León","Club/Bass","Miami-Artist, Reggaeton- und Latin-Club-Einflüsse im Techno-Kontext.",{soundcloud:"https://soundcloud.com/nickleon"}],
+  ["CCL","Techno/Electro","Kantiger, elektroider Club-Sound mit US-Underground-Wurzeln.",{soundcloud:"https://soundcloud.com/ccl-url"}],
+  ["Kia (AU) & Verraco","Club/Bass","Globaler Bass-Club-Sound, tanzflächenorientiert und percussiv.",{soundcloud:"https://soundcloud.com/verraco"}],
+  ["Coffintexts","Techno/Electro","Düsterer, industrieller Electro-Techno.",{soundcloud:"https://soundcloud.com/coffintexts"}],
+  ["dirtydms","Techno/Electro","Rough-edged Electro-Techno.",{soundcloud:"https://soundcloud.com/dirtydms"}],
+  ["mad miran","Techno/Electro","Elektroider, treibender Club-Sound.",{soundcloud:"https://soundcloud.com/madmiran"}],
+  ["State OFFF","Techno","Straighter Peak-Time-Techno.",{soundcloud:"https://soundcloud.com/state-offf"}],
+  ["Sedef Adasï & L.B. Dub Corp (Luke Slater)","Techno","Luke Slaters Dub-Techno-Projekt — schwer, hypnotisch, dubby.",{soundcloud:"https://soundcloud.com/sedefadasi"}],
+  ["T.NO","Techno","Treibender Club-Techno.",{soundcloud:"https://soundcloud.com/tdotno"}],
+  ["Sepehr","Techno","Peak-Time-orientierter Techno-Sound.",{soundcloud:"https://soundcloud.com/sepehr-a"}],
+  ["Identified Patient","Techno","Kantiger, roher Techno-Act.",{soundcloud:"https://soundcloud.com/identified-patient"}],
+  ["Roi Perez","House/Techno","Vielseitiger Selector zwischen House und Techno.",{soundcloud:"https://soundcloud.com/roi_perez"}],
+  ["Alex Kassian","Techno","Peak-Time-Techno mit Fokus auf Groove statt reinem Bumm-Bumm.",{soundcloud:"https://soundcloud.com/alexkassian"}],
+  ["Cinnaman & Jyoty","House/Disco","Warmes Disco-House-Duo, tanzbar und sonnig.",{soundcloud:"https://soundcloud.com/cinnaman"}],
+  ["Kamma","House/Disco","Sonniger, discoiden House-Sound.",{soundcloud:"https://soundcloud.com/kamma"}],
+  ["Blasha & Allatt","House/Disco","Rhythm-Section-Umfeld, warme, groovige House-Selektionen.",{soundcloud:"https://soundcloud.com/blasha-allatt"}],
+  ["Danielle","House","Solider, groovebetonter House-Sound.",{soundcloud:"https://soundcloud.com/danielle_dj"}],
+  ["Deetron presents SOULMATE","House/Techno","Schweizer Veteran, souliger House-trifft-Techno-Sound.",{soundcloud:"https://soundcloud.com/deetron"}],
+  ["Metz Attack","Disco/House","Discoiden, tanzbaren House-Edits verschrieben.",{soundcloud:"https://soundcloud.com/user-326429180"}],
+  ["Suze Ijó","Disco/House","Warme Disco-Selektorin.",{soundcloud:"https://soundcloud.com/suze_ijo"}],
+  ["Elias Mazian","House","Groovender, tief-sitzender House.",{soundcloud:"https://soundcloud.com/eliasmazian"}],
+  ["Fadi Mohem & Ogazón","House/Techno","Vielseitiges Duo zwischen House und Techno.",{soundcloud:"https://soundcloud.com/fadimohem"}],
+  ["Francesco Del Garda & Paquita Gordon","House","Warmer, verspielter House-Sound.",{soundcloud:"https://soundcloud.com/paquitagordon"}],
+  ["NIKS","House/Techno","Vielseitige Selectorin zwischen House und Techno.",{soundcloud:"https://soundcloud.com/niksmusic"}],
+  ["Naone","House","Groovender House-Sound.",{soundcloud:"https://soundcloud.com/na_one"}],
+  ["Nina Welch","House","Tanzbarer, warmer House.",{soundcloud:"https://soundcloud.com/nina-welch"}],
+  ["Kléo","House","Sonniger House-Sound.",{soundcloud:"https://soundcloud.com/kleodisco"}],
+  ["Robert Bergman","House","Solider Club-House.",{soundcloud:"https://soundcloud.com/robert-bergman"}],
+  ["Roel de Boer","House","Groovebetonter House.",{soundcloud:"https://soundcloud.com/roel-de-boer"}],
+  ["Rozaly","House","Warmer, tanzbarer House-Sound.",{soundcloud:"https://soundcloud.com/rozalymusic"}],
+  ["Sandrien (house set)","House","Niederländische Selectorin im House-Modus.",{soundcloud:"https://soundcloud.com/sandrien"}],
+  ["Satoshi Yamamura","House/Techno","Japanischer Selector zwischen House und Techno.",{soundcloud:"https://soundcloud.com/satoshi-okonkole"}],
+  ["Jesse G","House","Clubbiger House-Sound.",{soundcloud:"https://soundcloud.com/jessegofficial"}],
+  ["Mia Cecille","House","Tanzflächenorientierter House.",{soundcloud:"https://soundcloud.com/miacecille"}],
+  ["Mia Koden","Techno","Treibender Club-Techno.",{soundcloud:"https://soundcloud.com/miakoden"}],
+  ["Victor (DE)","House/Techno","Vielseitiger deutscher Selector.",{soundcloud:"https://soundcloud.com/victormgcpwr"}],
+  ["Hamsterslang","House/Techno","Energetischer Club-Sound zwischen House und Techno.",{}],
+  ["Hamatsuki & skyra (live)","Eclectic","Live-Act mit elektronischem, texturiertem Sound.",{soundcloud:"https://soundcloud.com/hamatsuki"}],
+  ["Alfred Anders","House/Techno","Kroatischer Local-Hero (Sound Metaphors), Heimspiel-Vibes.",{soundcloud:"https://soundcloud.com/alfred-anders"}],
+  ["AMORAL","House","Groovender House-Sound.",{soundcloud:"https://soundcloud.com/amoralish"}],
+  ["BADSISTA","Bass/Club","Brasilianischer Bass- und Global-Club-Sound, hohe Energie.",{soundcloud:"https://soundcloud.com/badsista"}],
+  ["BASHKKA","Bass/Club","Percussiver, experimenteller Bass-Club-Sound.",{soundcloud:"https://soundcloud.com/bashkka"}],
+  ["Binh & Vladimir Ivkovic","Eclectic","Zwei Digger-Legenden für abenteuerliche, genrelose Reisen.",{soundcloud:"https://soundcloud.com/vladimir-ivkovic"}],
+  ["Charlie Bones","Eclectic","NTS-Radio-Stimme, eklektischer Mix aus Soul, Funk, Dance.",{soundcloud:"https://soundcloud.com/charliebones"}],
+  ["Loradeniz","House/Techno","Vielseitige Selectorin.",{soundcloud:"https://soundcloud.com/loradeniz"}],
+  ["DJ Koolt & Quest (IT)","House","Italienisches House-Duo.",{soundcloud:"https://soundcloud.com/dj-koolt"}],
+  ["Tai Lokun","Eclectic","Genreübergreifender, wortgewandter Act.",{soundcloud:"https://soundcloud.com/tai_lokun"}],
+  ["Vitesse & No[ah]","House","Clubbiger House-Sound.",{soundcloud:"https://soundcloud.com/vitesse-music"}],
+  ["Dekmantel Soundsystem & Friends","Eclectic","Bass-schwere Soundsystem-Session mit Reggae- und Dub-Wurzeln.",{soundcloud:"https://soundcloud.com/dkmntl"}],
+];
+
+// Genre filtering: normalize compound tags ("House/Disco") into a fixed
+// set of core genres so filtering by "House" also matches "House/Disco" etc.
+const GENRE_ORDER = ["House","Techno","Disco","Bass/Club","Jungle/D&B","Eclectic"];
+const GENRE_MAP = {
+  "House":"House","Techno":"Techno","Disco":"Disco",
+  "Bass":"Bass/Club","Club":"Bass/Club","Ghettotech":"Bass/Club","Electro":"Bass/Club",
+  "Jungle":"Jungle/D&B","D&B":"Jungle/D&B",
+  "Eclectic":"Eclectic","Broken Beat":"Eclectic","Funk":"Eclectic"
+};
+function coreGenres(tag){
+  const tokens = tag.split("/").map(t=>t.trim());
+  const set = new Set();
+  tokens.forEach(t=>{ set.add(GENRE_MAP[t] || t); });
+  return [...set];
+}
+const AVAILABLE_GENRES = GENRE_ORDER.filter(g => FEATURED_ALL.some(a => coreGenres(a[1]).includes(g)));
+
+let activeGenre = "Alle";
+let searchTerm = "";
+let FEATURED = FEATURED_ALL.slice();
+
+function applyFilter(){
+  FEATURED = FEATURED_ALL.filter(a=>{
+    const genreOk = activeGenre==="Alle" || coreGenres(a[1]).includes(activeGenre);
+    const searchOk = a[0].toLowerCase().includes(searchTerm.toLowerCase());
+    return genreOk && searchOk;
+  });
+  centerIndex = 0;
+}
+
+function renderChips(){
+  const chipsEl = document.getElementById("chips");
+  chipsEl.innerHTML = "";
+  ["Alle", ...AVAILABLE_GENRES].forEach(g=>{
+    const b = document.createElement("button");
+    b.className = "chip" + (g===activeGenre ? " active":"");
+    b.textContent = g;
+    b.onclick = ()=>{
+      activeGenre = g;
+      applyFilter();
+      renderChips();
+      renderCoverflow();
+      renderDetail();
+    };
+    chipsEl.appendChild(b);
+  });
+}
+
+document.getElementById("search").addEventListener("input", (e)=>{
+  searchTerm = e.target.value;
+  applyFilter();
+  renderCoverflow();
+  renderDetail();
+});
+
+let centerIndex = 0;
+let selected = JSON.parse(sessionStorage.getItem("dekSelCF") || "{}");
+const imageCache = {}; // name -> resolved image url
+
+function persist(){ sessionStorage.setItem("dekSelCF", JSON.stringify(selected)); }
+
+function searchUrl(platform, name){
+  const q = encodeURIComponent(name.replace(/\(.*?\)/g,"").trim());
+  if(platform==="instagram") return `https://www.instagram.com/explore/search/keyword/?q=${q}`;
+  if(platform==="spotify") return `https://open.spotify.com/search/${q}`;
+  if(platform==="soundcloud") return `https://soundcloud.com/search?q=${q}`;
+}
+
+async function fetchImage(name, socials){
+  if(imageCache[name]) return imageCache[name];
+  try{
+    let oembedUrl;
+    if(socials.spotify){
+      oembedUrl = `https://open.spotify.com/oembed?url=${encodeURIComponent(socials.spotify)}`;
+    } else if(socials.soundcloud){
+      oembedUrl = `https://soundcloud.com/oembed?format=json&url=${encodeURIComponent(socials.soundcloud)}`;
+    } else {
+      return null;
+    }
+    const res = await fetch(oembedUrl);
+    const data = await res.json();
+    imageCache[name] = data.thumbnail_url || null;
+    return imageCache[name];
+  } catch(err){
+    console.warn("Bild konnte nicht geladen werden für", name, err);
+    return null;
+  }
+}
+
+const track = document.getElementById("cfTrack");
+let dragOffsetPx = 0;
+let dragHappened = false;
+const SPACING = window.innerWidth < 600 ? 95 : 118;
+
+function transformFor(offset){
+  const abs = Math.abs(offset);
+  const clamped = Math.max(-1, Math.min(1, offset));
+  const translateX = offset * SPACING;
+  const translateZ = -Math.min(abs,5) * 70;
+  const rotateY = clamped * -50;
+  const scale = 1.15 - 0.15 * Math.min(abs, 3);
+  return `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+}
+
+function applyTransforms(withTransition){
+  // virtualCenter is a continuous (fractional) position: as dragOffsetPx
+  // changes during a scroll/drag, this moves smoothly between integer
+  // indices, so the "front" item and its rotation/scale/brightness
+  // interpolate live instead of snapping only once the gesture ends.
+  const virtualCenter = centerIndex - dragOffsetPx / SPACING;
+  let nearestIndex = 0, nearestDist = Infinity;
+
+  [...track.children].forEach((el, i)=>{
+    const offset = i - virtualCenter;
+    const abs = Math.abs(offset);
+    if(abs < nearestDist){ nearestDist = abs; nearestIndex = i; }
+    el.style.transition = withTransition ? "" : "none";
+    el.style.zIndex = Math.round(200 - abs);
+    el.style.opacity = abs>6 ? 0 : 1;
+    el.style.transform = transformFor(offset);
+    const art = el.querySelector(".cf-art");
+    if(art) art.style.filter = `brightness(${1 - 0.45*Math.min(abs,1)})`;
+  });
+
+  [...track.children].forEach((el, i)=> el.classList.toggle("cf-center", i===nearestIndex));
+}
+
+function renderCoverflow(){
+  track.innerHTML = "";
+  FEATURED.forEach((artist, i)=>{
+    const [name] = artist;
+
+    const item = document.createElement("div");
+    item.className = "cf-item";
+
+    const artDiv = document.createElement("div");
+    artDiv.className = "cf-art";
+    // initials placeholder shown until (or instead of) a real image
+    const ph = document.createElement("div");
+    ph.className = "cf-placeholder";
+    ph.textContent = name.replace(/\(.*?\)/g,"").trim().split(/\s+/).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+    artDiv.appendChild(ph);
+    const img = document.createElement("img");
+    img.alt = name;
+    img.draggable = false;
+    artDiv.appendChild(img);
+    item.appendChild(artDiv);
+
+    const reflection = document.createElement("div");
+    reflection.className = "cf-reflection";
+    item.appendChild(reflection);
+
+    item.onclick = ()=>{
+      if(dragHappened) return; // ignore click-through right after a drag
+      centerIndex = i;
+      renderDetail();
+      applyTransforms(true);
+    };
+    track.appendChild(item);
+
+    const socials = artist[3];
+    fetchImage(name, socials).then(url=>{
+      if(url){
+        img.src = url;
+        img.onload = ()=> img.classList.add("loaded");
+        reflection.style.backgroundImage = `url(${url})`;
+      }
+    });
+  });
+  applyTransforms(true);
+}
+
+// Simple, direct embed per artist. Recreated every time you scroll to a
+// different artist — which means switching artists stops whatever was
+// playing, on purpose. No background/persistent player, no hand-off logic.
+let spotifyAPI = null;
+window.onSpotifyIframeApiReady = (API)=>{ spotifyAPI = API; };
+
+function mountBrowseEmbed(name, socials, container){
+  container.innerHTML = "";
+  if(socials.spotifyId){
+    const holder = document.createElement("div");
+    container.appendChild(holder);
+    const trySpotify = ()=>{
+      if(!spotifyAPI){ setTimeout(trySpotify, 200); return; }
+      spotifyAPI.createController(holder, { uri: `spotify:artist:${socials.spotifyId}`, width:"100%", height:352 }, ()=>{});
+    };
+    trySpotify();
+  } else if(socials.soundcloud){
+    const iframe = document.createElement("iframe");
+    iframe.width = "100%"; iframe.height = 300; iframe.frameBorder = 0; iframe.loading = "lazy";
+    iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(socials.soundcloud)}&color=%23d9a857&auto_play=false&show_user=true&visual=false`;
+    container.appendChild(iframe);
+  } else {
+    container.innerHTML = `<div class="no-player-hint">Kein verifizierter Player — über die Buttons unten auf Spotify/SoundCloud suchen.</div>`;
+  }
+}
+
+function socialButtonsHtml(name, socials){
+  const platforms = [["instagram","Instagram"],["spotify","Spotify"],["soundcloud","SoundCloud"]];
+  return platforms.map(([key,label])=>{
+    const verifiedUrl = socials[key];
+    const url = verifiedUrl || searchUrl(key, name);
+    const badge = verifiedUrl ? "" : " (suchen)";
+    return `<a class="social-btn" href="${url}" target="_blank" rel="noopener">${label}${badge}</a>`;
+  }).join("");
+}
+
+const detailEl = document.getElementById("detail");
+function renderDetail(){
+  if(FEATURED.length===0){
+    detailEl.innerHTML = `<div class="cf-empty">Keine Acts in dieser Kategorie.</div>`;
+    return;
+  }
+  const [name, tag, blurb, socials] = FEATURED[centerIndex];
+  detailEl.innerHTML = `
+    <div class="detail-top">
+      <div>
+        <div class="detail-name">${name}</div>
+        <div class="detail-tag">${tag}</div>
+      </div>
+    </div>
+    <div class="detail-blurb">${blurb}</div>
+    <div class="embed-wrap" id="browseEmbedWrap"></div>
+    <div class="social-row">${socialButtonsHtml(name, socials)}</div>
+    <button class="add-btn${selected.hasOwnProperty(name) ? " selected":""}" id="addBtn">${selected.hasOwnProperty(name) ? "✓ Im Plan" : "+ Zum Plan hinzufügen"}</button>
+  `;
+  mountBrowseEmbed(name, socials, document.getElementById("browseEmbedWrap"));
+  document.getElementById("addBtn").onclick = ()=>{
+    if(selected.hasOwnProperty(name)) delete selected[name];
+    else selected[name] = true;
+    persist();
+    renderDetail();
+    renderPlannerCount();
+  };
+}
+
+function renderPlannerCount(){
+  const n = Object.keys(selected).length;
+  document.getElementById("plannerCount").textContent = n + (n===1 ? " Act gemerkt" : " Acts gemerkt");
+}
+
+// --- Navigation: mouse wheel + drag (mouse only, per spec) ---
+const viewport = document.getElementById("cfViewport");
+const cfSticky = document.getElementById("cfSticky"); // always visible (sticky), safe to scope wheel-nav to this
+
+// Wheel: accumulates live, exactly like the drag below — the row follows
+// the scroll immediately (no per-tick cooldown), and once the gesture
+// settles (~130ms of no wheel events) it snaps to the nearest item.
+// This lets one fast scroll gesture skip through several items at once.
+let wheelSettleTimer = null;
+cfSticky.addEventListener("wheel", (e)=>{
+  e.preventDefault();
+  const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+  dragOffsetPx -= delta;
+  applyTransforms(false); // instant, no transition — visible live feedback
+
+  clearTimeout(wheelSettleTimer);
+  wheelSettleTimer = setTimeout(()=>{
+    const steps = Math.round(-dragOffsetPx / SPACING);
+    dragOffsetPx = 0;
+    if(steps !== 0){
+      centerIndex = Math.max(0, Math.min(FEATURED.length-1, centerIndex + steps));
+    }
+    applyTransforms(true); // smooth snap into formation
+    renderDetail();
+  }, 130);
+}, {passive:false});
+
+// Drag: image follows the cursor live while held, snaps to nearest
+// item on release. Native image drag-out is disabled via draggable=false
+// and user-drag:none in CSS.
+let isDragging = false;
+let dragStartX = 0;
+
+viewport.addEventListener("mousedown", (e)=>{
+  isDragging = true;
+  dragHappened = false;
+  dragStartX = e.clientX;
+  dragOffsetPx = 0;
+  viewport.classList.add("dragging");
+  e.preventDefault();
+});
+viewport.addEventListener("dragstart", (e)=> e.preventDefault());
+
+window.addEventListener("mousemove", (e)=>{
+  if(!isDragging) return;
+  dragOffsetPx = e.clientX - dragStartX;
+  if(Math.abs(dragOffsetPx) > 5) dragHappened = true;
+  applyTransforms(false); // no transition: follow the cursor instantly
+});
+window.addEventListener("mouseup", ()=>{
+  if(!isDragging) return;
+  isDragging = false;
+  viewport.classList.remove("dragging");
+
+  const steps = Math.round(-dragOffsetPx / SPACING);
+  dragOffsetPx = 0;
+  if(steps !== 0){
+    centerIndex = Math.max(0, Math.min(FEATURED.length-1, centerIndex + steps));
+  }
+  applyTransforms(true); // snap smoothly back into formation
+  renderDetail();
+});
+
+// Touch: same logic as the mouse drag above, for iPhone/Android swiping.
+// Uses passive:false + preventDefault so the page doesn't scroll vertically
+// while swiping the coverflow horizontally.
+viewport.addEventListener("touchstart", (e)=>{
+  isDragging = true;
+  dragHappened = false;
+  dragStartX = e.touches[0].clientX;
+  dragOffsetPx = 0;
+  viewport.classList.add("dragging");
+}, {passive:true});
+
+viewport.addEventListener("touchmove", (e)=>{
+  if(!isDragging) return;
+  e.preventDefault();
+  dragOffsetPx = e.touches[0].clientX - dragStartX;
+  if(Math.abs(dragOffsetPx) > 5) dragHappened = true;
+  applyTransforms(false);
+}, {passive:false});
+
+viewport.addEventListener("touchend", ()=>{
+  if(!isDragging) return;
+  isDragging = false;
+  viewport.classList.remove("dragging");
+
+  const steps = Math.round(-dragOffsetPx / SPACING);
+  dragOffsetPx = 0;
+  if(steps !== 0){
+    centerIndex = Math.max(0, Math.min(FEATURED.length-1, centerIndex + steps));
+  }
+  applyTransforms(true);
+  renderDetail();
+});
+
+renderChips();
+renderCoverflow();
+renderDetail();
+renderPlannerCount();
+</script>
+</body>
+</html>
