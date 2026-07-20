@@ -143,6 +143,16 @@
   .player-tab.active[data-player="soundcloud"]{background:#FF5500; border-color:#FF5500; color:#2A0D00;}
 
   .detail-name-row{display:flex; align-items:center; gap:12px;}
+  .detail-name-multi{display:flex; align-items:baseline; flex-wrap:wrap; gap:4px 8px;}
+  .name-part{
+    font-family:'Fraunces', serif; font-size:26px; font-weight:600; line-height:1.1;
+    background:none; border:none; padding:0 0 2px; cursor:pointer;
+    color:rgba(239,227,200,0.45); border-bottom:2px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .name-part:hover{color:rgba(239,227,200,0.8);}
+  .name-part.active{color:var(--sand); border-bottom-color:var(--gold);}
+  .name-sep{font-family:'Fraunces',serif; font-size:26px; color:rgba(239,227,200,0.3);}
   .fav-btn{
     flex:none; width:34px; height:34px; border-radius:50%; font-size:15px; line-height:1;
     border:1px solid var(--gold); background:transparent; color:var(--gold); cursor:pointer;
@@ -246,11 +256,11 @@ const FEATURED_ALL = [
   ["Antal (techno set)","Disco/Techno","Rush-Hour-Mitgründer, hier im selteneren Techno-Modus statt Disco.",
     {instagram:"https://www.instagram.com/antalheitlager/", spotify:"https://open.spotify.com/artist/0e1whBY5xv3rF7Zj5cxLD9", spotifyId:"0e1whBY5xv3rF7Zj5cxLD9", soundcloud:"https://soundcloud.com/antalrushhour"}],
   ["Hunee & Optimo (Espacio)","House/Disco","Zwei Meister-Digger für eklektische, genreübergreifende Marathon-Sets.",
-    {instagram:"https://www.instagram.com/hunchmusic/", spotify:"https://open.spotify.com/artist/6uElH4moADg7AGB3DCGOwy", spotifyId:"6uElH4moADg7AGB3DCGOwy", soundcloud:"https://soundcloud.com/hunee"}],
+    {instagram:"https://www.instagram.com/hunchmusic/", members:[{name:"Hunee", spotify:"https://open.spotify.com/artist/6uElH4moADg7AGB3DCGOwy", spotifyId:"6uElH4moADg7AGB3DCGOwy", soundcloud:"https://soundcloud.com/hunee"}, {name:"Optimo"}]}],
   ["Palms Trax","House/Disco","Warme, nostalgische House-Grooves mit Disco-Einschlag.",
     {instagram:"https://www.instagram.com/palmstrax/", spotify:"https://open.spotify.com/artist/52XSRQqTAfZ8ZrIqkQvQyA", spotifyId:"52XSRQqTAfZ8ZrIqkQvQyA", soundcloud:"https://soundcloud.com/palmstrax"}],
   ["Job Jobse & Peach & Shanti Celeste","House","Dekmantel-Resident trifft zwei gefragte UK-House-Selectors.",
-    {instagram:"https://www.instagram.com/jobjobse/", soundcloud:"https://soundcloud.com/jobjobse"}],
+    {members:[{name:"Job Jobse", instagram:"https://www.instagram.com/jobjobse/", soundcloud:"https://soundcloud.com/jobjobse"}, {name:"Peach", spotify:"https://open.spotify.com/artist/5e6DBZg0HJywmjj9BX9iIN", spotifyId:"5e6DBZg0HJywmjj9BX9iIN", soundcloud:"https://soundcloud.com/ohpeach"}, {name:"Shanti Celeste", spotify:"https://open.spotify.com/artist/3CkM2290WOa2ESzhlu5mzM", spotifyId:"3CkM2290WOa2ESzhlu5mzM", soundcloud:"https://soundcloud.com/shanticeleste"}]}],
   ["DJ Godfather","Ghettotech/Electro","Detroit-Ghettotech-Urgestein, schnell, funky, tanzflächen-fokussiert.",
     {instagram:"https://www.instagram.com/djgodfatherdetroit/", spotify:"https://open.spotify.com/artist/0cKrM2XKF7wxyfEQDauvyQ", spotifyId:"0cKrM2XKF7wxyfEQDauvyQ", soundcloud:"https://soundcloud.com/dj-godfather"}],
   ["Mr Scruff","Eclectic/Funk","Britische Institution — verspielte Reisen durch Funk, Soul, Bass, Humor.",
@@ -262,7 +272,7 @@ const FEATURED_ALL = [
   ["Peverelist","Techno","Bristol-Urgestein zwischen Dubstep-Wurzeln und Techno.",
     {spotify:"https://open.spotify.com/artist/0UrA452V5vJpCW5ezx0YMP", spotifyId:"0UrA452V5vJpCW5ezx0YMP", soundcloud:"https://soundcloud.com/peverelist"}],
   ["Tim Reaper & Dwarde","Jungle/D&B","Alte-Schule-Jungle-Revival, schnell und breakslastig.",
-    {spotify:"https://open.spotify.com/artist/03KZUWKQujlCcgEdcrkvWd", spotifyId:"03KZUWKQujlCcgEdcrkvWd", soundcloud:"https://soundcloud.com/tim-reaper"}],
+    {members:[{name:"Tim Reaper", spotify:"https://open.spotify.com/artist/03KZUWKQujlCcgEdcrkvWd", spotifyId:"03KZUWKQujlCcgEdcrkvWd", soundcloud:"https://soundcloud.com/tim-reaper"}, {name:"Dwarde", spotify:"https://open.spotify.com/artist/6Yj4KzTFxItt3bGK9DuX4O", spotifyId:"6Yj4KzTFxItt3bGK9DuX4O", soundcloud:"https://soundcloud.com/dwarde"}]}],
   // --- Restliche Acts: keine verifizierten Profile, daher Platzhalter-Kachel
   //     und Suchlinks statt eingebettetem Player ---
   ["Ploy","Techno/Bass","Timedance-Artist, düsterer, texturierter Bass-Techno.",{spotify:"https://open.spotify.com/artist/3mYbIK47UNTYkexhqoJOBN", spotifyId:"3mYbIK47UNTYkexhqoJOBN", soundcloud:"https://soundcloud.com/deejayploy"}],
@@ -274,18 +284,18 @@ const FEATURED_ALL = [
   ["upsammy","Techno","Niederländische Produzentin, texturierter, experimenteller Club-Sound.",{spotify:"https://open.spotify.com/artist/2orXY2oMFNUtiNrNMDyreV", spotifyId:"2orXY2oMFNUtiNrNMDyreV", soundcloud:"https://soundcloud.com/upsammy"}],
   ["Nick León","Club/Bass","Miami-Artist, Reggaeton- und Latin-Club-Einflüsse im Techno-Kontext.",{spotify:"https://open.spotify.com/artist/3qOGTt4eTeEkCn3efhAGu2", spotifyId:"3qOGTt4eTeEkCn3efhAGu2", soundcloud:"https://soundcloud.com/nickleon"}],
   ["CCL","Techno/Electro","Kantiger, elektroider Club-Sound mit US-Underground-Wurzeln.",{spotify:"https://open.spotify.com/artist/0suhJuu3BRMRFZRzEzPpnw", spotifyId:"0suhJuu3BRMRFZRzEzPpnw", soundcloud:"https://soundcloud.com/ccl-url"}],
-  ["Kia (AU) & Verraco","Club/Bass","Globaler Bass-Club-Sound, tanzflächenorientiert und percussiv.",{soundcloud:"https://soundcloud.com/verraco"}],
+  ["Kia (AU) & Verraco","Club/Bass","Globaler Bass-Club-Sound, tanzflächenorientiert und percussiv.",{members:[{name:"Kia", spotify:"https://open.spotify.com/artist/2CYrFS3P4S67HC0RSNfbKZ", spotifyId:"2CYrFS3P4S67HC0RSNfbKZ", soundcloud:"https://soundcloud.com/kia-sydney"}, {name:"Verraco", soundcloud:"https://soundcloud.com/verraco"}]}],
   ["Coffintexts","Techno/Electro","Düsterer, industrieller Electro-Techno.",{spotify:"https://open.spotify.com/artist/4OMHnyekp6Sv6BdGxDcmK1", spotifyId:"4OMHnyekp6Sv6BdGxDcmK1", soundcloud:"https://soundcloud.com/coffintexts"}],
   ["dirtydms","Techno/Electro","Rough-edged Electro-Techno.",{soundcloud:"https://soundcloud.com/dirtydms"}],
   ["mad miran","Techno/Electro","Elektroider, treibender Club-Sound.",{soundcloud:"https://soundcloud.com/madmiran"}],
   ["State OFFF","Techno","Straighter Peak-Time-Techno.",{spotify:"https://open.spotify.com/artist/4NHX5R0Td6ooWh1a34AhtB", spotifyId:"4NHX5R0Td6ooWh1a34AhtB", soundcloud:"https://soundcloud.com/state-offf"}],
-  ["Sedef Adasï & L.B. Dub Corp (Luke Slater)","Techno","Luke Slaters Dub-Techno-Projekt — schwer, hypnotisch, dubby.",{spotify:"https://open.spotify.com/artist/4jY1cwyuyqQATeSI16ZeYD", spotifyId:"4jY1cwyuyqQATeSI16ZeYD", soundcloud:"https://soundcloud.com/sedefadasi"}],
+  ["Sedef Adasï & L.B. Dub Corp (Luke Slater)","Techno","Luke Slaters Dub-Techno-Projekt — schwer, hypnotisch, dubby.",{members:[{name:"Sedef Adasï", spotify:"https://open.spotify.com/artist/4jY1cwyuyqQATeSI16ZeYD", spotifyId:"4jY1cwyuyqQATeSI16ZeYD", soundcloud:"https://soundcloud.com/sedefadasi"}, {name:"L.B. Dub Corp", spotify:"https://open.spotify.com/artist/7FEUkVfaBCIk5HQ6176Pnw", spotifyId:"7FEUkVfaBCIk5HQ6176Pnw", soundcloud:"https://soundcloud.com/lbdubcorp"}]}],
   ["T.NO","Techno","Treibender Club-Techno.",{spotify:"https://open.spotify.com/artist/0QyZldTsxCVm1nndBkoQQm", spotifyId:"0QyZldTsxCVm1nndBkoQQm", soundcloud:"https://soundcloud.com/tdotno"}],
   ["Sepehr","Techno","Peak-Time-orientierter Techno-Sound.",{spotify:"https://open.spotify.com/artist/6O1tVpp8NoYMi9hNMVMEbz", spotifyId:"6O1tVpp8NoYMi9hNMVMEbz", soundcloud:"https://soundcloud.com/sepehr-a"}],
   ["Identified Patient","Techno","Kantiger, roher Techno-Act.",{spotify:"https://open.spotify.com/artist/7f8YjXIXYXMDWaYCICYUUD", spotifyId:"7f8YjXIXYXMDWaYCICYUUD", soundcloud:"https://soundcloud.com/identified-patient"}],
   ["Roi Perez","House/Techno","Vielseitiger Selector zwischen House und Techno.",{spotify:"https://open.spotify.com/artist/6fOXGxoOcvjJ2i1ka6csic", spotifyId:"6fOXGxoOcvjJ2i1ka6csic", soundcloud:"https://soundcloud.com/roi_perez"}],
   ["Alex Kassian","Techno","Peak-Time-Techno mit Fokus auf Groove statt reinem Bumm-Bumm.",{spotify:"https://open.spotify.com/artist/3YcfGOBLEsPKVZj5Ecu0QY", spotifyId:"3YcfGOBLEsPKVZj5Ecu0QY", soundcloud:"https://soundcloud.com/alexkassian"}],
-  ["Cinnaman & Jyoty","House/Disco","Warmes Disco-House-Duo, tanzbar und sonnig.",{spotify:"https://open.spotify.com/artist/2UHOxilPkRsyFp4EQu8Sq4", spotifyId:"2UHOxilPkRsyFp4EQu8Sq4", soundcloud:"https://soundcloud.com/cinnaman"}],
+  ["Cinnaman & Jyoty","House/Disco","Warmes Disco-House-Duo, tanzbar und sonnig.",{members:[{name:"Cinnaman", spotify:"https://open.spotify.com/artist/2UHOxilPkRsyFp4EQu8Sq4", spotifyId:"2UHOxilPkRsyFp4EQu8Sq4", soundcloud:"https://soundcloud.com/cinnaman"}, {name:"Jyoty", spotify:"https://open.spotify.com/artist/5yniF5litJGW61RAUeO3Mw", spotifyId:"5yniF5litJGW61RAUeO3Mw", soundcloud:"https://soundcloud.com/jyotysingh"}]}],
   ["Kamma","House/Disco","Sonniger, discoiden House-Sound.",{spotify:"https://open.spotify.com/artist/775xcuXzPW9p8TODycEul0", spotifyId:"775xcuXzPW9p8TODycEul0", soundcloud:"https://soundcloud.com/kamma"}],
   ["Blasha & Allatt","House/Disco","Rhythm-Section-Umfeld, warme, groovige House-Selektionen.",{spotify:"https://open.spotify.com/artist/6RdNGMvTyeHLZs4Bv3o9UT", spotifyId:"6RdNGMvTyeHLZs4Bv3o9UT", soundcloud:"https://soundcloud.com/blasha-allatt"}],
   ["Danielle","House","Solider, groovebetonter House-Sound.",{soundcloud:"https://soundcloud.com/danielle_dj"}],
@@ -293,8 +303,8 @@ const FEATURED_ALL = [
   ["Metz Attack","Disco/House","Discoiden, tanzbaren House-Edits verschrieben.",{soundcloud:"https://soundcloud.com/user-326429180"}],
   ["Suze Ijó","Disco/House","Warme Disco-Selektorin.",{spotify:"https://open.spotify.com/artist/2MMrwopTbNUL7mj1o9JfBo", spotifyId:"2MMrwopTbNUL7mj1o9JfBo", soundcloud:"https://soundcloud.com/suze_ijo"}],
   ["Elias Mazian","House","Groovender, tief-sitzender House.",{spotify:"https://open.spotify.com/artist/5bcee1i2yLpnhwm5Nbz3vU", spotifyId:"5bcee1i2yLpnhwm5Nbz3vU", soundcloud:"https://soundcloud.com/eliasmazian"}],
-  ["Fadi Mohem & Ogazón","House/Techno","Vielseitiges Duo zwischen House und Techno.",{spotify:"https://open.spotify.com/artist/054VxUoJAoxf48TlGoWf75", spotifyId:"054VxUoJAoxf48TlGoWf75", soundcloud:"https://soundcloud.com/fadimohem"}],
-  ["Francesco Del Garda & Paquita Gordon","House","Warmer, verspielter House-Sound.",{spotify:"https://open.spotify.com/artist/7AgKl7H19hTtfF4G4gopQz", spotifyId:"7AgKl7H19hTtfF4G4gopQz", soundcloud:"https://soundcloud.com/paquitagordon"}],
+  ["Fadi Mohem & Ogazón","House/Techno","Vielseitiges Duo zwischen House und Techno.",{members:[{name:"Fadi Mohem", spotify:"https://open.spotify.com/artist/054VxUoJAoxf48TlGoWf75", spotifyId:"054VxUoJAoxf48TlGoWf75", soundcloud:"https://soundcloud.com/fadimohem"}, {name:"Ogazón", spotify:"https://open.spotify.com/artist/6FIr59SJB0UrQ0vzmi7PWb", spotifyId:"6FIr59SJB0UrQ0vzmi7PWb", soundcloud:"https://soundcloud.com/ogazon"}]}],
+  ["Francesco Del Garda & Paquita Gordon","House","Warmer, verspielter House-Sound.",{members:[{name:"Francesco Del Garda", spotify:"https://open.spotify.com/artist/7AgKl7H19hTtfF4G4gopQz", spotifyId:"7AgKl7H19hTtfF4G4gopQz"}, {name:"Paquita Gordon", soundcloud:"https://soundcloud.com/paquitagordon"}]}],
   ["NIKS","House/Techno","Vielseitige Selectorin zwischen House und Techno.",{spotify:"https://open.spotify.com/artist/4agdFRCRYyF5xpqg5rThPt", spotifyId:"4agdFRCRYyF5xpqg5rThPt", soundcloud:"https://soundcloud.com/niksmusic"}],
   ["Naone","House","Groovender House-Sound.",{soundcloud:"https://soundcloud.com/na_one"}],
   ["Nina Welch","House","Tanzbarer, warmer House.",{soundcloud:"https://soundcloud.com/nina-welch"}],
@@ -309,17 +319,17 @@ const FEATURED_ALL = [
   ["Mia Koden","Techno","Treibender Club-Techno.",{spotify:"https://open.spotify.com/artist/7klmdoyDc4W8SnRhFDVcDY", spotifyId:"7klmdoyDc4W8SnRhFDVcDY", soundcloud:"https://soundcloud.com/miakoden"}],
   ["Victor (DE)","House/Techno","Vielseitiger deutscher Selector.",{soundcloud:"https://soundcloud.com/victormgcpwr"}],
   ["Hamsterslang","House/Techno","Energetischer Club-Sound zwischen House und Techno.",{}],
-  ["Hamatsuki & skyra (live)","Eclectic","Live-Act mit elektronischem, texturiertem Sound.",{spotify:"https://open.spotify.com/artist/0iHcXTmtnaI6Q0hNhXtXZG", spotifyId:"0iHcXTmtnaI6Q0hNhXtXZG", soundcloud:"https://soundcloud.com/hamatsuki"}],
+  ["Hamatsuki & skyra (live)","Eclectic","Live-Act mit elektronischem, texturiertem Sound.",{members:[{name:"Hamatsuki", spotify:"https://open.spotify.com/artist/0iHcXTmtnaI6Q0hNhXtXZG", spotifyId:"0iHcXTmtnaI6Q0hNhXtXZG", soundcloud:"https://soundcloud.com/hamatsuki"}, {name:"skyra", spotify:"https://open.spotify.com/artist/1WnC61XS3mXRH6r3Ur9woo", spotifyId:"1WnC61XS3mXRH6r3Ur9woo", soundcloud:"https://soundcloud.com/skyraa"}]}],
   ["Alfred Anders","House/Techno","Kroatischer Local-Hero (Sound Metaphors), Heimspiel-Vibes.",{soundcloud:"https://soundcloud.com/alfred-anders"}],
   ["AMORAL","House","Groovender House-Sound.",{soundcloud:"https://soundcloud.com/amoralish"}],
   ["BADSISTA","Bass/Club","Brasilianischer Bass- und Global-Club-Sound, hohe Energie.",{spotify:"https://open.spotify.com/artist/0KdLlx7p42yA7aftp3dgpb", spotifyId:"0KdLlx7p42yA7aftp3dgpb", soundcloud:"https://soundcloud.com/badsista"}],
   ["BASHKKA","Bass/Club","Percussiver, experimenteller Bass-Club-Sound.",{spotify:"https://open.spotify.com/artist/5ofWf87ImDZQO2KzwdlPSw", spotifyId:"5ofWf87ImDZQO2KzwdlPSw", soundcloud:"https://soundcloud.com/bashkka"}],
-  ["Binh & Vladimir Ivkovic","Eclectic","Zwei Digger-Legenden für abenteuerliche, genrelose Reisen.",{spotify:"https://open.spotify.com/artist/6STA0SHS2IXsnePZ8RZ0z9", spotifyId:"6STA0SHS2IXsnePZ8RZ0z9", soundcloud:"https://soundcloud.com/vladimir-ivkovic"}],
+  ["Binh & Vladimir Ivkovic","Eclectic","Zwei Digger-Legenden für abenteuerliche, genrelose Reisen.",{members:[{name:"Binh", spotify:"https://open.spotify.com/artist/6STA0SHS2IXsnePZ8RZ0z9", spotifyId:"6STA0SHS2IXsnePZ8RZ0z9"}, {name:"Vladimir Ivkovic", soundcloud:"https://soundcloud.com/vladimir-ivkovic"}]}],
   ["Charlie Bones","Eclectic","NTS-Radio-Stimme, eklektischer Mix aus Soul, Funk, Dance.",{soundcloud:"https://soundcloud.com/charliebones"}],
   ["Loradeniz","House/Techno","Vielseitige Selectorin.",{spotify:"https://open.spotify.com/artist/3wO7EZF5Cet3MkFX3KisbX", spotifyId:"3wO7EZF5Cet3MkFX3KisbX", soundcloud:"https://soundcloud.com/loradeniz"}],
-  ["DJ Koolt & Quest (IT)","House","Italienisches House-Duo.",{soundcloud:"https://soundcloud.com/dj-koolt"}],
+  ["DJ Koolt & Quest (IT)","House","Italienisches House-Duo.",{members:[{name:"DJ Koolt", soundcloud:"https://soundcloud.com/dj-koolt"}, {name:"Quest", soundcloud:"https://soundcloud.com/questwax"}]}],
   ["Tai Lokun","Eclectic","Genreübergreifender, wortgewandter Act.",{soundcloud:"https://soundcloud.com/tai_lokun"}],
-  ["Vitesse & No[ah]","House","Clubbiger House-Sound.",{soundcloud:"https://soundcloud.com/vitesse-music"}],
+  ["Vitesse & Noar","House","Clubbiger House-Sound.",{members:[{name:"Vitesse", soundcloud:"https://soundcloud.com/vitesse-music"}, {name:"Noar", soundcloud:"https://soundcloud.com/noarelbali"}]}],
   ["Dekmantel Soundsystem & Friends","Eclectic","Bass-schwere Soundsystem-Session mit Reggae- und Dub-Wurzeln.",{soundcloud:"https://soundcloud.com/dkmntl"}],
 ];
 
@@ -540,6 +550,13 @@ function warnIfUnplayable(iframe, profileUrl, token){
   });
 }
 
+// A B2B act carries one entry per DJ; a solo act is treated as a list of one,
+// so everything downstream only ever deals with members.
+function membersOf(name, socials){
+  if(Array.isArray(socials.members) && socials.members.length) return socials.members;
+  return [{ name, spotify: socials.spotify, spotifyId: socials.spotifyId, soundcloud: socials.soundcloud }];
+}
+
 function playersFor(socials){
   const list = [];
   if(socials.spotifyId) list.push("spotify");
@@ -590,46 +607,83 @@ function renderDetail(){
     return;
   }
   const [name, tag, blurb, socials] = FEATURED[centerIndex];
-  const players = playersFor(socials);
-  let activePlayer = players[0] || null;
+  const members = membersOf(name, socials);
   const isFav = selected.hasOwnProperty(name);
   const favLabel = t => t ? "Aus dem Plan entfernen" : "Zum Plan hinzufügen";
 
-  const tabsHtml = players.length > 1 ? `
-    <div class="player-tabs" role="tablist">
-      ${players.map(p=>`<button class="player-tab${p===activePlayer ? " active":""}" data-player="${p}" role="tab" aria-selected="${p===activePlayer}">${p==="spotify" ? "Spotify" : "SoundCloud"}</button>`).join("")}
-    </div>` : "";
+  let activeMember = 0;
+  let activePlayer = playersFor(members[0])[0] || null;
+
+  // For a B2B the act name doubles as the selector: each DJ is its own button.
+  const nameHtml = members.length > 1
+    ? members.map((m,i)=>`<button class="name-part${i===0 ? " active":""}" data-member="${i}" aria-pressed="${i===0}">${m.name}</button>`).join(`<span class="name-sep">&amp;</span>`)
+    : `<div class="detail-name">${name}</div>`;
 
   detailEl.innerHTML = `
     <div class="detail-top">
       <div>
         <div class="detail-name-row">
-          <div class="detail-name">${name}</div>
+          <div class="detail-name${members.length > 1 ? " detail-name-multi":""}">${members.length > 1 ? nameHtml : name}</div>
           <button class="fav-btn${isFav ? " selected":""}" id="favBtn" aria-pressed="${isFav}" title="${favLabel(isFav)}" aria-label="${favLabel(isFav)}">♥</button>
         </div>
         <div class="detail-tag">${tag}</div>
       </div>
     </div>
     <div class="detail-blurb">${blurb}</div>
-    ${tabsHtml}
+    <div id="playerTabs"></div>
     <div class="embed-wrap" id="browseEmbedWrap"></div>
-    <div class="social-row">${socialButtonsHtml(name, socials)}</div>
+    <div class="social-row" id="socialRow"></div>
   `;
 
   const wrap = document.getElementById("browseEmbedWrap");
-  mountBrowseEmbed(name, socials, wrap, activePlayer);
+  const tabsHost = document.getElementById("playerTabs");
 
-  detailEl.querySelectorAll(".player-tab").forEach(btn=>{
+  // Tabs describe the selected DJ, so they are rebuilt whenever the DJ changes.
+  function renderPlayer(){
+    const member = members[activeMember];
+    const players = playersFor(member);
+
+    // The act-level Instagram belongs to a solo act only — on a B2B it would
+    // point at whichever DJ happened to be listed first.
+    const linksForButtons = members.length > 1 ? member : Object.assign({}, socials, member);
+    document.getElementById("socialRow").innerHTML =
+      socialButtonsHtml(member.name, linksForButtons);
+    if(players.indexOf(activePlayer) === -1) activePlayer = players[0] || null;
+
+    tabsHost.innerHTML = players.length > 1 ? `
+      <div class="player-tabs" role="tablist">
+        ${players.map(p=>`<button class="player-tab${p===activePlayer ? " active":""}" data-player="${p}" role="tab" aria-selected="${p===activePlayer}">${p==="spotify" ? "Spotify" : "SoundCloud"}</button>`).join("")}
+      </div>` : "";
+
+    tabsHost.querySelectorAll(".player-tab").forEach(btn=>{
+      btn.onclick = ()=>{
+        if(btn.dataset.player === activePlayer) return;
+        activePlayer = btn.dataset.player;
+        renderPlayer();
+      };
+    });
+
+    if(activePlayer){
+      mountBrowseEmbed(member.name, member, wrap, activePlayer);
+    } else {
+      mountToken++; // cancel any pending mount from the previous DJ
+      wrap.innerHTML = `<div class="no-player-hint">Für ${member.name} gibt es keinen verifizierten Player — über die Buttons unten suchen.</div>`;
+    }
+  }
+  renderPlayer();
+
+  detailEl.querySelectorAll(".name-part").forEach(btn=>{
     btn.onclick = ()=>{
-      const next = btn.dataset.player;
-      if(next === activePlayer) return;
-      activePlayer = next;
-      detailEl.querySelectorAll(".player-tab").forEach(b=>{
-        const on = b.dataset.player === activePlayer;
+      const next = Number(btn.dataset.member);
+      if(next === activeMember) return;
+      activeMember = next;
+      activePlayer = null; // let the new DJ decide which platform opens
+      detailEl.querySelectorAll(".name-part").forEach(b=>{
+        const on = Number(b.dataset.member) === activeMember;
         b.classList.toggle("active", on);
-        b.setAttribute("aria-selected", String(on));
+        b.setAttribute("aria-pressed", String(on));
       });
-      mountBrowseEmbed(name, socials, wrap, activePlayer);
+      renderPlayer();
     };
   });
 
