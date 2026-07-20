@@ -119,6 +119,7 @@
   .detail-tag{
     font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
     color: var(--deep); background: var(--foam); padding:4px 10px; border-radius:100px; white-space:nowrap; margin-top:4px;
+    width:fit-content;
   }
   .detail-blurb{font-size:14.5px; color:rgba(239,227,200,0.75); margin-top:8px; line-height:1.55; max-width:60ch;}
   .embed-wrap{margin-top:14px; border-radius:10px; overflow:hidden;}
@@ -128,11 +129,24 @@
     font-family:'IBM Plex Mono',monospace; font-size:11px; padding:6px 12px; border-radius:100px;
     border:1px solid var(--foam); color: var(--foam); text-decoration:none;
   }
-  .add-btn{
-    margin-top:14px; display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:11.5px;
-    padding:7px 14px; border-radius:100px; border:1px solid var(--gold); background:transparent; color:var(--gold); cursor:pointer;
+  /* Player tabs — only rendered when an act actually has both platforms */
+  .player-tabs{display:flex; gap:8px; margin-top:14px;}
+  .player-tab{
+    font-family:'IBM Plex Mono',monospace; font-size:11.5px; padding:7px 16px; border-radius:100px;
+    border:1px solid var(--line); background:transparent; color:rgba(239,227,200,0.6); cursor:pointer;
   }
-  .add-btn.selected{background:var(--gold); color:var(--night);}
+  .player-tab:hover{color:var(--sand);}
+  .player-tab.active[data-player="spotify"]{background:#1DB954; border-color:#1DB954; color:#08240F;}
+  .player-tab.active[data-player="soundcloud"]{background:#FF5500; border-color:#FF5500; color:#2A0D00;}
+
+  .detail-name-row{display:flex; align-items:center; gap:12px;}
+  .fav-btn{
+    flex:none; width:34px; height:34px; border-radius:50%; font-size:15px; line-height:1;
+    border:1px solid var(--gold); background:transparent; color:var(--gold); cursor:pointer;
+    transition: transform .12s ease, background .12s ease;
+  }
+  .fav-btn:hover{transform:scale(1.08);}
+  .fav-btn.selected{background:var(--gold); color:var(--night);}
 
   .planner-bar{
     position:fixed; bottom:0; left:0; right:0; background: var(--night);
@@ -503,27 +517,36 @@ function waitForSpotify(holder, spotifyId, token, deadline){
   setTimeout(()=> waitForSpotify(holder, spotifyId, token, deadline), 200);
 }
 
-function mountBrowseEmbed(name, socials, container){
+function playersFor(socials){
+  const list = [];
+  if(socials.spotifyId) list.push("spotify");
+  if(socials.soundcloud) list.push("soundcloud");
+  return list;
+}
+
+// Mounts exactly one platform. Switching tabs replaces the player rather than
+// hiding it, so a hidden iframe can never keep playing in the background.
+function mountBrowseEmbed(name, socials, container, platform){
   container.innerHTML = "";
   const token = ++mountToken;
 
-  if(socials.spotifyId){
+  if(platform === "spotify" && socials.spotifyId){
     const holder = document.createElement("div");
     holder.className = "embed-slot";
     container.appendChild(holder);
     waitForSpotify(holder, socials.spotifyId, token, Date.now() + SPOTIFY_WAIT_MS);
+    return;
   }
 
-  if(socials.soundcloud){
+  if(platform === "soundcloud" && socials.soundcloud){
     const iframe = document.createElement("iframe");
     iframe.width = "100%"; iframe.height = 300; iframe.frameBorder = 0; iframe.loading = "lazy";
     iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(socials.soundcloud)}&color=%23d9a857&auto_play=false&show_user=true&visual=false`;
     container.appendChild(iframe);
+    return;
   }
 
-  if(!socials.spotifyId && !socials.soundcloud){
-    container.innerHTML = `<div class="no-player-hint">Kein verifizierter Player — über die Buttons unten auf Spotify/SoundCloud suchen.</div>`;
-  }
+  container.innerHTML = `<div class="no-player-hint">Kein verifizierter Player — über die Buttons unten auf Spotify/SoundCloud suchen.</div>`;
 }
 
 function socialButtonsHtml(name, socials){
@@ -543,24 +566,61 @@ function renderDetail(){
     return;
   }
   const [name, tag, blurb, socials] = FEATURED[centerIndex];
+  const players = playersFor(socials);
+  let activePlayer = players[0] || null;
+  const isFav = selected.hasOwnProperty(name);
+  const favLabel = t => t ? "Aus dem Plan entfernen" : "Zum Plan hinzufügen";
+
+  const tabsHtml = players.length > 1 ? `
+    <div class="player-tabs" role="tablist">
+      ${players.map(p=>`<button class="player-tab${p===activePlayer ? " active":""}" data-player="${p}" role="tab" aria-selected="${p===activePlayer}">${p==="spotify" ? "Spotify" : "SoundCloud"}</button>`).join("")}
+    </div>` : "";
+
   detailEl.innerHTML = `
     <div class="detail-top">
       <div>
-        <div class="detail-name">${name}</div>
+        <div class="detail-name-row">
+          <div class="detail-name">${name}</div>
+          <button class="fav-btn${isFav ? " selected":""}" id="favBtn" aria-pressed="${isFav}" title="${favLabel(isFav)}" aria-label="${favLabel(isFav)}">♥</button>
+        </div>
         <div class="detail-tag">${tag}</div>
       </div>
     </div>
     <div class="detail-blurb">${blurb}</div>
+    ${tabsHtml}
     <div class="embed-wrap" id="browseEmbedWrap"></div>
     <div class="social-row">${socialButtonsHtml(name, socials)}</div>
-    <button class="add-btn${selected.hasOwnProperty(name) ? " selected":""}" id="addBtn">${selected.hasOwnProperty(name) ? "✓ Im Plan" : "+ Zum Plan hinzufügen"}</button>
   `;
-  mountBrowseEmbed(name, socials, document.getElementById("browseEmbedWrap"));
-  document.getElementById("addBtn").onclick = ()=>{
+
+  const wrap = document.getElementById("browseEmbedWrap");
+  mountBrowseEmbed(name, socials, wrap, activePlayer);
+
+  detailEl.querySelectorAll(".player-tab").forEach(btn=>{
+    btn.onclick = ()=>{
+      const next = btn.dataset.player;
+      if(next === activePlayer) return;
+      activePlayer = next;
+      detailEl.querySelectorAll(".player-tab").forEach(b=>{
+        const on = b.dataset.player === activePlayer;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-selected", String(on));
+      });
+      mountBrowseEmbed(name, socials, wrap, activePlayer);
+    };
+  });
+
+  // Toggled in place: a full re-render would remount the player and cut off
+  // whatever the user is listening to.
+  const favBtn = document.getElementById("favBtn");
+  favBtn.onclick = ()=>{
     if(selected.hasOwnProperty(name)) delete selected[name];
     else selected[name] = true;
     persist();
-    renderDetail();
+    const on = selected.hasOwnProperty(name);
+    favBtn.classList.toggle("selected", on);
+    favBtn.setAttribute("aria-pressed", String(on));
+    favBtn.title = favLabel(on);
+    favBtn.setAttribute("aria-label", favLabel(on));
     renderPlannerCount();
   };
 }
