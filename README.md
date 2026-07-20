@@ -4,9 +4,12 @@ Interaktiver Cover-Flow-Explorer für das Dekmantel Selectors 2026 Line-up (20.�
 
 ## Features
 - Cover Flow im iTunes-Stil: 70 Acts, per Mausrad, Ziehen oder Touch-Wischen durchblättern
-- 69 Acts mit echtem Artist-Bild und eingebettetem SoundCloud/Spotify-Player
+- Echtes Artist-Bild pro Act, live über die oEmbed-Schnittstellen geladen
+- 83 einzeln hörbare DJs, 81 davon mit Player — bei B2B-Sets ist jeder DJ über seinen Namen im Titel wählbar
+- Spotify und SoundCloud als Tabs, wo beides vorhanden ist
+- Nicht abspielbare SoundCloud-Mixe werden als solche ausgewiesen statt eines toten Players
 - Suche + Genre-Filter (House, Techno, Disco, Bass/Club, Jungle/D&B, Eclectic)
-- "Zum Plan hinzufügen" als persönliche Merkliste
+- Merkliste per Herz-Button, bleibt über Browser-Neustarts erhalten
 - Mobil-tauglich (iPhone/Android)
 
 ## Nutzung
