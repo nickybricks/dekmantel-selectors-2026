@@ -102,12 +102,15 @@
   .no-player-hint a{color:var(--gold);}
   .sc-warning{margin-bottom:8px;}
   .cf-reflection{
-    position:absolute; top:100%; left:0; width:150px; height:150px;
+    position:absolute; top:100%; left:0; width:150px; height:60px;
     transform: scaleY(-1);
     background-size:cover; background-position:center;
     -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent 65%);
     mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent 65%);
     opacity:0.55;
+    /* Purely decorative: it overhangs the viewport, so it must never swallow
+       a click meant for the act names underneath. */
+    pointer-events:none;
   }
   /* brightness is now set inline per-frame for smooth continuous transitions */
   .cf-hint{
@@ -210,7 +213,7 @@
     .cf-viewport{ height:200px; }
     .cf-item{ width:120px; height:120px; margin-left:-60px; margin-top:-60px; }
     .cf-art{ width:120px; height:120px; }
-    .cf-reflection{ width:120px; height:120px; }
+    .cf-reflection{ width:120px; height:48px; }
     .detail-name{ font-size:21px; }
   }
 </style>
