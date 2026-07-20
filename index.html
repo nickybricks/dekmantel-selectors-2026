@@ -99,6 +99,8 @@
     font-family:'IBM Plex Mono',monospace; font-size:12px; color:rgba(239,227,200,0.5);
     padding:14px; border:1px dashed var(--line); border-radius:9px;
   }
+  .no-player-hint a{color:var(--gold);}
+  .sc-warning{margin-bottom:8px;}
   .cf-reflection{
     position:absolute; top:100%; left:0; width:150px; height:150px;
     transform: scaleY(-1);
@@ -263,58 +265,58 @@ const FEATURED_ALL = [
     {spotify:"https://open.spotify.com/artist/03KZUWKQujlCcgEdcrkvWd", spotifyId:"03KZUWKQujlCcgEdcrkvWd", soundcloud:"https://soundcloud.com/tim-reaper"}],
   // --- Restliche Acts: keine verifizierten Profile, daher Platzhalter-Kachel
   //     und Suchlinks statt eingebettetem Player ---
-  ["Ploy","Techno/Bass","Timedance-Artist, düsterer, texturierter Bass-Techno.",{soundcloud:"https://soundcloud.com/deejayploy"}],
-  ["Introspekt","Techno/Jungle","Bewegt sich zwischen treibendem Techno und Jungle-Breaks.",{soundcloud:"https://soundcloud.com/sageintrospekt"}],
-  ["Karen Nyame KG","Bass/Club","Energiegeladene UK-Garage- und Bassline-Sets.",{soundcloud:"https://soundcloud.com/karennyamekg"}],
-  ["Virginia","Techno","BPitch-Control-Artistin, minimal-treibender Techno.",{soundcloud:"https://soundcloud.com/virginia-dj"}],
+  ["Ploy","Techno/Bass","Timedance-Artist, düsterer, texturierter Bass-Techno.",{spotify:"https://open.spotify.com/artist/3mYbIK47UNTYkexhqoJOBN", spotifyId:"3mYbIK47UNTYkexhqoJOBN", soundcloud:"https://soundcloud.com/deejayploy"}],
+  ["Introspekt","Techno/Jungle","Bewegt sich zwischen treibendem Techno und Jungle-Breaks.",{spotify:"https://open.spotify.com/artist/31ykDn30Wy1xVAZJesUwgn", spotifyId:"31ykDn30Wy1xVAZJesUwgn", soundcloud:"https://soundcloud.com/sageintrospekt"}],
+  ["Karen Nyame KG","Bass/Club","Energiegeladene UK-Garage- und Bassline-Sets.",{spotify:"https://open.spotify.com/artist/2TsxAQQq0xVbjBOPXozFVz", spotifyId:"2TsxAQQq0xVbjBOPXozFVz", soundcloud:"https://soundcloud.com/karennyamekg"}],
+  ["Virginia","Techno","BPitch-Control-Artistin, minimal-treibender Techno.",{spotify:"https://open.spotify.com/artist/5LlKDT1QsNNXrX6atoNDtP", spotifyId:"5LlKDT1QsNNXrX6atoNDtP", soundcloud:"https://soundcloud.com/virginia-dj"}],
   ["Orpheu The Wizard","Disco/House","Red-Light-Radio-Mitgründer, warme Discotheque-Grooves.",{soundcloud:"https://soundcloud.com/orpheuthewizard"}],
   ["Doudou MD","Disco/House","Kalahari-Oyster-Cult, tanzbare Disco- und House-Edits.",{soundcloud:"https://soundcloud.com/doudou-md"}],
-  ["upsammy","Techno","Niederländische Produzentin, texturierter, experimenteller Club-Sound.",{soundcloud:"https://soundcloud.com/upsammy"}],
-  ["Nick León","Club/Bass","Miami-Artist, Reggaeton- und Latin-Club-Einflüsse im Techno-Kontext.",{soundcloud:"https://soundcloud.com/nickleon"}],
-  ["CCL","Techno/Electro","Kantiger, elektroider Club-Sound mit US-Underground-Wurzeln.",{soundcloud:"https://soundcloud.com/ccl-url"}],
+  ["upsammy","Techno","Niederländische Produzentin, texturierter, experimenteller Club-Sound.",{spotify:"https://open.spotify.com/artist/2orXY2oMFNUtiNrNMDyreV", spotifyId:"2orXY2oMFNUtiNrNMDyreV", soundcloud:"https://soundcloud.com/upsammy"}],
+  ["Nick León","Club/Bass","Miami-Artist, Reggaeton- und Latin-Club-Einflüsse im Techno-Kontext.",{spotify:"https://open.spotify.com/artist/3qOGTt4eTeEkCn3efhAGu2", spotifyId:"3qOGTt4eTeEkCn3efhAGu2", soundcloud:"https://soundcloud.com/nickleon"}],
+  ["CCL","Techno/Electro","Kantiger, elektroider Club-Sound mit US-Underground-Wurzeln.",{spotify:"https://open.spotify.com/artist/0suhJuu3BRMRFZRzEzPpnw", spotifyId:"0suhJuu3BRMRFZRzEzPpnw", soundcloud:"https://soundcloud.com/ccl-url"}],
   ["Kia (AU) & Verraco","Club/Bass","Globaler Bass-Club-Sound, tanzflächenorientiert und percussiv.",{soundcloud:"https://soundcloud.com/verraco"}],
-  ["Coffintexts","Techno/Electro","Düsterer, industrieller Electro-Techno.",{soundcloud:"https://soundcloud.com/coffintexts"}],
+  ["Coffintexts","Techno/Electro","Düsterer, industrieller Electro-Techno.",{spotify:"https://open.spotify.com/artist/4OMHnyekp6Sv6BdGxDcmK1", spotifyId:"4OMHnyekp6Sv6BdGxDcmK1", soundcloud:"https://soundcloud.com/coffintexts"}],
   ["dirtydms","Techno/Electro","Rough-edged Electro-Techno.",{soundcloud:"https://soundcloud.com/dirtydms"}],
   ["mad miran","Techno/Electro","Elektroider, treibender Club-Sound.",{soundcloud:"https://soundcloud.com/madmiran"}],
-  ["State OFFF","Techno","Straighter Peak-Time-Techno.",{soundcloud:"https://soundcloud.com/state-offf"}],
-  ["Sedef Adasï & L.B. Dub Corp (Luke Slater)","Techno","Luke Slaters Dub-Techno-Projekt — schwer, hypnotisch, dubby.",{soundcloud:"https://soundcloud.com/sedefadasi"}],
-  ["T.NO","Techno","Treibender Club-Techno.",{soundcloud:"https://soundcloud.com/tdotno"}],
-  ["Sepehr","Techno","Peak-Time-orientierter Techno-Sound.",{soundcloud:"https://soundcloud.com/sepehr-a"}],
-  ["Identified Patient","Techno","Kantiger, roher Techno-Act.",{soundcloud:"https://soundcloud.com/identified-patient"}],
-  ["Roi Perez","House/Techno","Vielseitiger Selector zwischen House und Techno.",{soundcloud:"https://soundcloud.com/roi_perez"}],
-  ["Alex Kassian","Techno","Peak-Time-Techno mit Fokus auf Groove statt reinem Bumm-Bumm.",{soundcloud:"https://soundcloud.com/alexkassian"}],
-  ["Cinnaman & Jyoty","House/Disco","Warmes Disco-House-Duo, tanzbar und sonnig.",{soundcloud:"https://soundcloud.com/cinnaman"}],
-  ["Kamma","House/Disco","Sonniger, discoiden House-Sound.",{soundcloud:"https://soundcloud.com/kamma"}],
-  ["Blasha & Allatt","House/Disco","Rhythm-Section-Umfeld, warme, groovige House-Selektionen.",{soundcloud:"https://soundcloud.com/blasha-allatt"}],
+  ["State OFFF","Techno","Straighter Peak-Time-Techno.",{spotify:"https://open.spotify.com/artist/4NHX5R0Td6ooWh1a34AhtB", spotifyId:"4NHX5R0Td6ooWh1a34AhtB", soundcloud:"https://soundcloud.com/state-offf"}],
+  ["Sedef Adasï & L.B. Dub Corp (Luke Slater)","Techno","Luke Slaters Dub-Techno-Projekt — schwer, hypnotisch, dubby.",{spotify:"https://open.spotify.com/artist/4jY1cwyuyqQATeSI16ZeYD", spotifyId:"4jY1cwyuyqQATeSI16ZeYD", soundcloud:"https://soundcloud.com/sedefadasi"}],
+  ["T.NO","Techno","Treibender Club-Techno.",{spotify:"https://open.spotify.com/artist/0QyZldTsxCVm1nndBkoQQm", spotifyId:"0QyZldTsxCVm1nndBkoQQm", soundcloud:"https://soundcloud.com/tdotno"}],
+  ["Sepehr","Techno","Peak-Time-orientierter Techno-Sound.",{spotify:"https://open.spotify.com/artist/6O1tVpp8NoYMi9hNMVMEbz", spotifyId:"6O1tVpp8NoYMi9hNMVMEbz", soundcloud:"https://soundcloud.com/sepehr-a"}],
+  ["Identified Patient","Techno","Kantiger, roher Techno-Act.",{spotify:"https://open.spotify.com/artist/7f8YjXIXYXMDWaYCICYUUD", spotifyId:"7f8YjXIXYXMDWaYCICYUUD", soundcloud:"https://soundcloud.com/identified-patient"}],
+  ["Roi Perez","House/Techno","Vielseitiger Selector zwischen House und Techno.",{spotify:"https://open.spotify.com/artist/6fOXGxoOcvjJ2i1ka6csic", spotifyId:"6fOXGxoOcvjJ2i1ka6csic", soundcloud:"https://soundcloud.com/roi_perez"}],
+  ["Alex Kassian","Techno","Peak-Time-Techno mit Fokus auf Groove statt reinem Bumm-Bumm.",{spotify:"https://open.spotify.com/artist/3YcfGOBLEsPKVZj5Ecu0QY", spotifyId:"3YcfGOBLEsPKVZj5Ecu0QY", soundcloud:"https://soundcloud.com/alexkassian"}],
+  ["Cinnaman & Jyoty","House/Disco","Warmes Disco-House-Duo, tanzbar und sonnig.",{spotify:"https://open.spotify.com/artist/2UHOxilPkRsyFp4EQu8Sq4", spotifyId:"2UHOxilPkRsyFp4EQu8Sq4", soundcloud:"https://soundcloud.com/cinnaman"}],
+  ["Kamma","House/Disco","Sonniger, discoiden House-Sound.",{spotify:"https://open.spotify.com/artist/775xcuXzPW9p8TODycEul0", spotifyId:"775xcuXzPW9p8TODycEul0", soundcloud:"https://soundcloud.com/kamma"}],
+  ["Blasha & Allatt","House/Disco","Rhythm-Section-Umfeld, warme, groovige House-Selektionen.",{spotify:"https://open.spotify.com/artist/6RdNGMvTyeHLZs4Bv3o9UT", spotifyId:"6RdNGMvTyeHLZs4Bv3o9UT", soundcloud:"https://soundcloud.com/blasha-allatt"}],
   ["Danielle","House","Solider, groovebetonter House-Sound.",{soundcloud:"https://soundcloud.com/danielle_dj"}],
-  ["Deetron presents SOULMATE","House/Techno","Schweizer Veteran, souliger House-trifft-Techno-Sound.",{soundcloud:"https://soundcloud.com/deetron"}],
+  ["Deetron presents SOULMATE","House/Techno","Schweizer Veteran, souliger House-trifft-Techno-Sound.",{spotify:"https://open.spotify.com/artist/0d4nL4lAEkHJIqLZSHBuav", spotifyId:"0d4nL4lAEkHJIqLZSHBuav", soundcloud:"https://soundcloud.com/deetron"}],
   ["Metz Attack","Disco/House","Discoiden, tanzbaren House-Edits verschrieben.",{soundcloud:"https://soundcloud.com/user-326429180"}],
-  ["Suze Ijó","Disco/House","Warme Disco-Selektorin.",{soundcloud:"https://soundcloud.com/suze_ijo"}],
-  ["Elias Mazian","House","Groovender, tief-sitzender House.",{soundcloud:"https://soundcloud.com/eliasmazian"}],
-  ["Fadi Mohem & Ogazón","House/Techno","Vielseitiges Duo zwischen House und Techno.",{soundcloud:"https://soundcloud.com/fadimohem"}],
-  ["Francesco Del Garda & Paquita Gordon","House","Warmer, verspielter House-Sound.",{soundcloud:"https://soundcloud.com/paquitagordon"}],
-  ["NIKS","House/Techno","Vielseitige Selectorin zwischen House und Techno.",{soundcloud:"https://soundcloud.com/niksmusic"}],
+  ["Suze Ijó","Disco/House","Warme Disco-Selektorin.",{spotify:"https://open.spotify.com/artist/2MMrwopTbNUL7mj1o9JfBo", spotifyId:"2MMrwopTbNUL7mj1o9JfBo", soundcloud:"https://soundcloud.com/suze_ijo"}],
+  ["Elias Mazian","House","Groovender, tief-sitzender House.",{spotify:"https://open.spotify.com/artist/5bcee1i2yLpnhwm5Nbz3vU", spotifyId:"5bcee1i2yLpnhwm5Nbz3vU", soundcloud:"https://soundcloud.com/eliasmazian"}],
+  ["Fadi Mohem & Ogazón","House/Techno","Vielseitiges Duo zwischen House und Techno.",{spotify:"https://open.spotify.com/artist/054VxUoJAoxf48TlGoWf75", spotifyId:"054VxUoJAoxf48TlGoWf75", soundcloud:"https://soundcloud.com/fadimohem"}],
+  ["Francesco Del Garda & Paquita Gordon","House","Warmer, verspielter House-Sound.",{spotify:"https://open.spotify.com/artist/7AgKl7H19hTtfF4G4gopQz", spotifyId:"7AgKl7H19hTtfF4G4gopQz", soundcloud:"https://soundcloud.com/paquitagordon"}],
+  ["NIKS","House/Techno","Vielseitige Selectorin zwischen House und Techno.",{spotify:"https://open.spotify.com/artist/4agdFRCRYyF5xpqg5rThPt", spotifyId:"4agdFRCRYyF5xpqg5rThPt", soundcloud:"https://soundcloud.com/niksmusic"}],
   ["Naone","House","Groovender House-Sound.",{soundcloud:"https://soundcloud.com/na_one"}],
   ["Nina Welch","House","Tanzbarer, warmer House.",{soundcloud:"https://soundcloud.com/nina-welch"}],
   ["Kléo","House","Sonniger House-Sound.",{soundcloud:"https://soundcloud.com/kleodisco"}],
-  ["Robert Bergman","House","Solider Club-House.",{soundcloud:"https://soundcloud.com/robert-bergman"}],
+  ["Robert Bergman","House","Solider Club-House.",{spotify:"https://open.spotify.com/artist/4W5YdsRCiTX1iQxo8gK0z9", spotifyId:"4W5YdsRCiTX1iQxo8gK0z9", soundcloud:"https://soundcloud.com/robert-bergman"}],
   ["Roel de Boer","House","Groovebetonter House.",{soundcloud:"https://soundcloud.com/roel-de-boer"}],
   ["Rozaly","House","Warmer, tanzbarer House-Sound.",{soundcloud:"https://soundcloud.com/rozalymusic"}],
-  ["Sandrien (house set)","House","Niederländische Selectorin im House-Modus.",{soundcloud:"https://soundcloud.com/sandrien"}],
+  ["Sandrien (house set)","House","Niederländische Selectorin im House-Modus.",{spotify:"https://open.spotify.com/artist/1OhQuHtue5ufdnIbP4RpH7", spotifyId:"1OhQuHtue5ufdnIbP4RpH7", soundcloud:"https://soundcloud.com/sandrien"}],
   ["Satoshi Yamamura","House/Techno","Japanischer Selector zwischen House und Techno.",{soundcloud:"https://soundcloud.com/satoshi-okonkole"}],
   ["Jesse G","House","Clubbiger House-Sound.",{soundcloud:"https://soundcloud.com/jessegofficial"}],
   ["Mia Cecille","House","Tanzflächenorientierter House.",{soundcloud:"https://soundcloud.com/miacecille"}],
-  ["Mia Koden","Techno","Treibender Club-Techno.",{soundcloud:"https://soundcloud.com/miakoden"}],
+  ["Mia Koden","Techno","Treibender Club-Techno.",{spotify:"https://open.spotify.com/artist/7klmdoyDc4W8SnRhFDVcDY", spotifyId:"7klmdoyDc4W8SnRhFDVcDY", soundcloud:"https://soundcloud.com/miakoden"}],
   ["Victor (DE)","House/Techno","Vielseitiger deutscher Selector.",{soundcloud:"https://soundcloud.com/victormgcpwr"}],
   ["Hamsterslang","House/Techno","Energetischer Club-Sound zwischen House und Techno.",{}],
-  ["Hamatsuki & skyra (live)","Eclectic","Live-Act mit elektronischem, texturiertem Sound.",{soundcloud:"https://soundcloud.com/hamatsuki"}],
+  ["Hamatsuki & skyra (live)","Eclectic","Live-Act mit elektronischem, texturiertem Sound.",{spotify:"https://open.spotify.com/artist/0iHcXTmtnaI6Q0hNhXtXZG", spotifyId:"0iHcXTmtnaI6Q0hNhXtXZG", soundcloud:"https://soundcloud.com/hamatsuki"}],
   ["Alfred Anders","House/Techno","Kroatischer Local-Hero (Sound Metaphors), Heimspiel-Vibes.",{soundcloud:"https://soundcloud.com/alfred-anders"}],
   ["AMORAL","House","Groovender House-Sound.",{soundcloud:"https://soundcloud.com/amoralish"}],
-  ["BADSISTA","Bass/Club","Brasilianischer Bass- und Global-Club-Sound, hohe Energie.",{soundcloud:"https://soundcloud.com/badsista"}],
-  ["BASHKKA","Bass/Club","Percussiver, experimenteller Bass-Club-Sound.",{soundcloud:"https://soundcloud.com/bashkka"}],
-  ["Binh & Vladimir Ivkovic","Eclectic","Zwei Digger-Legenden für abenteuerliche, genrelose Reisen.",{soundcloud:"https://soundcloud.com/vladimir-ivkovic"}],
+  ["BADSISTA","Bass/Club","Brasilianischer Bass- und Global-Club-Sound, hohe Energie.",{spotify:"https://open.spotify.com/artist/0KdLlx7p42yA7aftp3dgpb", spotifyId:"0KdLlx7p42yA7aftp3dgpb", soundcloud:"https://soundcloud.com/badsista"}],
+  ["BASHKKA","Bass/Club","Percussiver, experimenteller Bass-Club-Sound.",{spotify:"https://open.spotify.com/artist/5ofWf87ImDZQO2KzwdlPSw", spotifyId:"5ofWf87ImDZQO2KzwdlPSw", soundcloud:"https://soundcloud.com/bashkka"}],
+  ["Binh & Vladimir Ivkovic","Eclectic","Zwei Digger-Legenden für abenteuerliche, genrelose Reisen.",{spotify:"https://open.spotify.com/artist/6STA0SHS2IXsnePZ8RZ0z9", spotifyId:"6STA0SHS2IXsnePZ8RZ0z9", soundcloud:"https://soundcloud.com/vladimir-ivkovic"}],
   ["Charlie Bones","Eclectic","NTS-Radio-Stimme, eklektischer Mix aus Soul, Funk, Dance.",{soundcloud:"https://soundcloud.com/charliebones"}],
-  ["Loradeniz","House/Techno","Vielseitige Selectorin.",{soundcloud:"https://soundcloud.com/loradeniz"}],
+  ["Loradeniz","House/Techno","Vielseitige Selectorin.",{spotify:"https://open.spotify.com/artist/3wO7EZF5Cet3MkFX3KisbX", spotifyId:"3wO7EZF5Cet3MkFX3KisbX", soundcloud:"https://soundcloud.com/loradeniz"}],
   ["DJ Koolt & Quest (IT)","House","Italienisches House-Duo.",{soundcloud:"https://soundcloud.com/dj-koolt"}],
   ["Tai Lokun","Eclectic","Genreübergreifender, wortgewandter Act.",{soundcloud:"https://soundcloud.com/tai_lokun"}],
   ["Vitesse & No[ah]","House","Clubbiger House-Sound.",{soundcloud:"https://soundcloud.com/vitesse-music"}],
@@ -519,6 +521,25 @@ function waitForSpotify(holder, spotifyId, token, deadline){
   setTimeout(()=> waitForSpotify(holder, spotifyId, token, deadline), 200);
 }
 
+// SoundCloud only streams tracks whose policy is ALLOW to an anonymous embed.
+// Monetised ones make the widget report "playing" while the playhead never
+// moves, so say it up front instead of leaving a dead play button.
+function warnIfUnplayable(iframe, profileUrl, token){
+  if(typeof SC === "undefined" || !SC.Widget) return;
+  let widget;
+  try{ widget = SC.Widget(iframe); } catch(err){ return; }
+  widget.bind(SC.Widget.Events.READY, ()=>{
+    widget.getSounds(sounds=>{
+      if(token !== mountToken) return; // artist changed while we were asking
+      if((sounds || []).some(s=> s.policy === "ALLOW")) return;
+      const hint = document.createElement("div");
+      hint.className = "no-player-hint sc-warning";
+      hint.innerHTML = `SoundCloud gibt diese Mixe nur eingeloggt zum Abspielen frei — <a href="${profileUrl}" target="_blank" rel="noopener">auf SoundCloud öffnen</a>.`;
+      iframe.parentNode.insertBefore(hint, iframe);
+    });
+  });
+}
+
 function playersFor(socials){
   const list = [];
   if(socials.spotifyId) list.push("spotify");
@@ -545,6 +566,7 @@ function mountBrowseEmbed(name, socials, container, platform){
     iframe.width = "100%"; iframe.height = 300; iframe.frameBorder = 0; iframe.loading = "lazy";
     iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(socials.soundcloud)}&color=%23d9a857&auto_play=false&show_user=true&visual=false`;
     container.appendChild(iframe);
+    warnIfUnplayable(iframe, socials.soundcloud, token);
     return;
   }
 
