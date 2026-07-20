@@ -122,6 +122,7 @@
   }
   .detail-blurb{font-size:14.5px; color:rgba(239,227,200,0.75); margin-top:8px; line-height:1.55; max-width:60ch;}
   .embed-wrap{margin-top:14px; border-radius:10px; overflow:hidden;}
+  .embed-slot{margin-bottom:10px;}
   .social-row{display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;}
   .social-btn{
     font-family:'IBM Plex Mono',monospace; font-size:11px; padding:6px 12px; border-radius:100px;
@@ -482,22 +483,45 @@ function renderCoverflow(){
 let spotifyAPI = null;
 window.onSpotifyIframeApiReady = (API)=>{ spotifyAPI = API; };
 
+// Invalidates a pending Spotify mount when the user scrolls on to another
+// artist before the iframe API has answered.
+let mountToken = 0;
+const SPOTIFY_WAIT_MS = 5000;
+
+// Times out against a real deadline, not a tick count: background tabs and
+// slow devices throttle setTimeout well past its requested delay.
+function waitForSpotify(holder, spotifyId, token, deadline){
+  if(token !== mountToken) return; // artist changed — abandon this mount
+  if(spotifyAPI){
+    spotifyAPI.createController(holder, { uri: `spotify:artist:${spotifyId}`, width:"100%", height:352 }, ()=>{});
+    return;
+  }
+  if(Date.now() >= deadline){
+    holder.innerHTML = `<div class="no-player-hint">Spotify-Player gerade nicht erreichbar — der SoundCloud-Player darunter funktioniert.</div>`;
+    return;
+  }
+  setTimeout(()=> waitForSpotify(holder, spotifyId, token, deadline), 200);
+}
+
 function mountBrowseEmbed(name, socials, container){
   container.innerHTML = "";
+  const token = ++mountToken;
+
   if(socials.spotifyId){
     const holder = document.createElement("div");
+    holder.className = "embed-slot";
     container.appendChild(holder);
-    const trySpotify = ()=>{
-      if(!spotifyAPI){ setTimeout(trySpotify, 200); return; }
-      spotifyAPI.createController(holder, { uri: `spotify:artist:${socials.spotifyId}`, width:"100%", height:352 }, ()=>{});
-    };
-    trySpotify();
-  } else if(socials.soundcloud){
+    waitForSpotify(holder, socials.spotifyId, token, Date.now() + SPOTIFY_WAIT_MS);
+  }
+
+  if(socials.soundcloud){
     const iframe = document.createElement("iframe");
     iframe.width = "100%"; iframe.height = 300; iframe.frameBorder = 0; iframe.loading = "lazy";
     iframe.src = `https://w.soundcloud.com/player/?url=${encodeURIComponent(socials.soundcloud)}&color=%23d9a857&auto_play=false&show_user=true&visual=false`;
     container.appendChild(iframe);
-  } else {
+  }
+
+  if(!socials.spotifyId && !socials.soundcloud){
     container.innerHTML = `<div class="no-player-hint">Kein verifizierter Player — über die Buttons unten auf Spotify/SoundCloud suchen.</div>`;
   }
 }
