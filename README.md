@@ -13,4 +13,6 @@ Interaktiver Cover-Flow-Explorer für das Dekmantel Selectors 2026 Line-up (20.�
 Statische Seite, keine Dependencies, kein Build. `index.html` im Browser öffnen oder auf GitHub Pages hosten.
 
 ## Hinweis
+Inoffizielles Fan-Projekt — weder von Dekmantel Selectors betrieben noch autorisiert. Das Line-up ist ohne Gewähr; verbindlich ist allein [dekmantelselectors.com](https://dekmantelselectors.com).
+
 Artist-Bilder und Player laden live über die offiziellen oEmbed-Schnittstellen von SoundCloud/Spotify.

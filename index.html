@@ -51,6 +51,7 @@
     color:var(--sand); margin:18px 0 8px;
   }
   .note b{color:var(--gold);}
+  .note a{color:var(--gold);}
 
   /* COVER FLOW */
   .cf-viewport{
@@ -209,6 +210,7 @@
       <div class="eyebrow">The Garden Resort · Tisno, Hrvatska</div>
       <h1>Dekmantel<br><em>Selectors</em> 2026</h1>
       <div class="sub">Cover-Flow-Ansicht der bestätigten Top-Acts mit echtem Artist-Bild. Mit dem Mausrad, per Wischen/Ziehen oder mit dem Finger durchblättern.</div>
+      <div class="note"><b>Inoffizielles Fan-Projekt</b> — weder von Dekmantel Selectors betrieben noch autorisiert. Line-up ohne Gewähr; verbindlich ist allein <a href="https://dekmantelselectors.com" target="_blank" rel="noopener">dekmantelselectors.com</a>. Artist-Bilder und Player werden live von Spotify bzw. SoundCloud geladen.</div>
       <input class="search" id="search" placeholder="Artist suchen…">
       <div class="chips" id="chips"></div>
     </div>
@@ -375,10 +377,10 @@ document.getElementById("search").addEventListener("input", (e)=>{
 });
 
 let centerIndex = 0;
-let selected = JSON.parse(sessionStorage.getItem("dekSelCF") || "{}");
+let selected = JSON.parse(localStorage.getItem("dekSelCF") || "{}");
 const imageCache = {}; // name -> resolved image url
 
-function persist(){ sessionStorage.setItem("dekSelCF", JSON.stringify(selected)); }
+function persist(){ localStorage.setItem("dekSelCF", JSON.stringify(selected)); }
 
 function searchUrl(platform, name){
   const q = encodeURIComponent(name.replace(/\(.*?\)/g,"").trim());
